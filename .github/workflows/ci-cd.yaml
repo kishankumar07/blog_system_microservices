@@ -37,6 +37,12 @@ jobs:
         npm install
 
     - name: Run Services
+      env:
+        COMMENT_SERVICE_DB_URL: ${{ secrets.COMMENT_SERVICE_DB_URL }}
+        COMMENT_SERVICE_PORT: ${{ secrets.COMMENT_SERVICE_PORT }}
+        POST_SERVICE_HOST: ${{ secrets.POST_SERVICE_HOST }}
+        POST_SERVICE_DB_URL: ${{ secrets.POST_SERVICE_DB_URL }}
+        POST_SERVICE_PORT: ${{ secrets.POST_SERVICE_PORT }}
       run: |
         # Start all services
         cd api-gateway && npm run start &
