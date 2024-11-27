@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package comment;
+
+import "google/protobuf/timestamp.proto";
+
+// Service Definition
+service CommentService {
+  rpc CreateComment (CreateCommentRequest) returns (CreateCommentResponse);
+  rpc GetCommentsForPost (GetCommentsForPostRequest) returns (GetCommentsForPostResponse);
+  rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentResponse);
+}
+
+// Messages
+message CreateCommentRequest {
+  string postId = 1;
+  string author = 2;
+  string content = 3;
+}
+
+message CreateCommentResponse {
+  Comment comment = 1;
+}
+
+message GetCommentsForPostRequest {
+  string postId = 1;
+}
+
+message GetCommentsForPostResponse {
+  repeated Comment comments = 1;
+}
+
+message DeleteCommentRequest {
+  string id = 1;
+}
+
+message DeleteCommentResponse {
+  string message = 1;
+}
+
+
+message Comment {
+  string id = 1;
+  string postId = 2;
+  string author = 3;
+  string content = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}

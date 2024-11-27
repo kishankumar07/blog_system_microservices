@@ -3,76 +3,52 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - main 
   pull_request:
     branches:
-      - main
+      - main  
 
 jobs:
-  build-and-run:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - name: Install Dependencies for API Gateway
-      run: |
-        cd api-gateway
-        npm install
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Install Dependencies for Post Service
-      run: |
-        cd post-service
-        npm install
+      - name: Build and Push Post Service Docker Image
+        env:
+          POST_SERVICE_DB_URL: ${{ secrets.POST_SERVICE_DB_URL }}
+        run: |
+          docker build \
+            --build-arg DB_URL=${POST_SERVICE_DB_URL} \
+            -t kta6161/post-service:latest ./post-service
+          docker push kta6161/post-service:latest
 
-    - name: Install Dependencies for Comment Service
-      run: |
-        cd comment-service
-        npm install
-        
-    - name: List Directory Contents
-      run: |
-        echo "Root directory contents:"
-        ls
-        echo "API Gateway directory contents:"
-        ls api-gateway
-        echo "Post Service directory contents:"
-        ls post-service
-        echo "Comment Service directory contents:"
-        ls comment-service   
+      - name: Build and Push Comment Service Docker Image
+        env:
+          COMMENT_SERVICE_DB_URL: ${{ secrets.COMMENT_SERVICE_DB_URL }}
+        run: |
+          docker build \
+            --build-arg DB_URL=${COMMENT_SERVICE_DB_URL} \
+            -t kta6161/comment-service:latest ./comment-service
+          docker push kta6161/comment-service:latest
 
-    - name: Run Services
-      env:
-        COMMENT_SERVICE_DB_URL: ${{ secrets.COMMENT_SERVICE_DB_URL }}
-        COMMENT_SERVICE_PORT: ${{ secrets.COMMENT_SERVICE_PORT }}
-        POST_SERVICE_HOST: ${{ secrets.POST_SERVICE_HOST }}
-        POST_SERVICE_DB_URL: ${{ secrets.POST_SERVICE_DB_URL }}
-        POST_SERVICE_PORT: ${{ secrets.POST_SERVICE_PORT }}
-      run: |
-       # Start all services
-        cd $GITHUB_WORKSPACE/api-gateway && npm run start & 
-        API_GATEWAY_PID=$!
-        echo "API Gateway started with PID $API_GATEWAY_PID"
+      - name: Build and Push API Gateway Docker Image
+        run: |
+          docker build -t kta6161/api-gateway:latest ./api-gateway
+          docker push kta6161/api-gateway:latest
 
-        cd $GITHUB_WORKSPACE/post-service && npm run start & 
-        POST_SERVICE_PID=$!
-        echo "Post Service started with PID $POST_SERVICE_PID"
+      - name: Clean Up Docker
+        run: docker image prune -af
 
-        cd $GITHUB_WORKSPACE/comment-service && npm run start & 
-        COMMENT_SERVICE_PID=$!
-        echo "Comment Service started with PID $COMMENT_SERVICE_PID"
-
-        # Wait for all services to finish
-        wait $API_GATEWAY_PID
-        wait $POST_SERVICE_PID
-        wait $COMMENT_SERVICE_PID
-        echo "All services have started."
-
-    # (Optional) Add Deployment Step
-    # For example: Deploy to Render, Heroku, or a cloud server.
+      

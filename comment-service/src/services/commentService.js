@@ -8,7 +8,7 @@ import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename); 
-const POST_PROTO_PATH = path.join(__dirname,'../../../proto/post.proto')
+const POST_PROTO_PATH = path.join(__dirname,'../proto/post.proto')
 
 const packageDefinition = protoLoader.loadSync(POST_PROTO_PATH, {
       keepCase: true,
@@ -19,10 +19,15 @@ const packageDefinition = protoLoader.loadSync(POST_PROTO_PATH, {
     });
 
     const postProto = grpc.loadPackageDefinition(packageDefinition).post;
+
+    const POST_SERVICE_HOST = process.env.POST_SERVICE_HOST || "localhost";
+    const POST_SERVICE_PORT = process.env.POST_SERVICE_PORT || "50051";
+    const POST_SERVICE_URL = `${POST_SERVICE_HOST}:${POST_SERVICE_PORT}`;
+
     
     // Create Post Service Client
     const postClient = new postProto.PostService(
-      process.env.POST_SERVICE_HOST || "localhost:50051",
+      POST_SERVICE_URL,
       grpc.credentials.createInsecure()
     );
 

@@ -4,3 +4,21 @@
             import swaggerDocument from './swagger.json' assert { type: 'json' };
             
 - that was a typical example
+
+
+
+
+# Optional: Deploy to cloud platform (e.g., Render, AWS, etc.)
+      - name: Deploy to Render (Example)
+        run: |
+          curl -X POST https://api.render.com/deploy/some-deploy-url -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+
+
+
+
+
+
+
+
+
+

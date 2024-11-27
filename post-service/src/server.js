@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename); 
 
-const POST_PROTO_PATH = path.join(__dirname, '../../proto/post.proto');
+const POST_PROTO_PATH = path.join(__dirname, './proto/post.proto');
 
 // Load the protocol buffer definition
 const packageDefinition = protoLoader.loadSync(POST_PROTO_PATH, {

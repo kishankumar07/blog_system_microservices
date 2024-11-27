@@ -10,11 +10,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+
 # Copy the rest of the app files
 COPY . .
 
 # Expose the service port
-EXPOSE 50051 
+EXPOSE 3000 
 
 # Command to start the service
 CMD ["npm", "start"]

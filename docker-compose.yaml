@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - post-service
+      - comment-service
+    environment:
+      POST_SERVICE_HOST: post-service
+      POST_SERVICE_PORT: 50051
+      COMMENT_SERVICE_HOST: comment-service
+      COMMENT_SERVICE_PORT: 50052
+    networks:
+      - app-network
+
+  post-service:
+    build:
+      context: ./post-service
+    ports:
+      - "50051:50051"
+    environment:
+      POST_SERVICE_PORT: 50051
+      DB_URL: ${POST_SERVICE_DB_URL}
+    networks:
+      - app-network
+
+  comment-service:
+    build:
+      context: ./comment-service
+    ports:
+      - "50052:50052"
+    depends_on:
+      - post-service
+    environment:
+      COMMENT_SERVICE_PORT: 50052
+      POST_SERVICE_HOST: post-service
+      POST_SERVICE_PORT: 50051
+      DB_URL: ${COMMENT_SERVICE_DB_URL}
+    networks:
+      - app-network
+
+networks:
+    app-network:
+     driver: bridge

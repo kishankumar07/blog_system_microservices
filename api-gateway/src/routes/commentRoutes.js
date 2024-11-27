@@ -10,13 +10,18 @@ import {fileURLToPath} from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url); 
 const __dirname = path.dirname(__filename);
-const COMMENT_PROTO_PATH = path.join(__dirname, "../../../proto/comment.proto");
+const COMMENT_PROTO_PATH = path.join(__dirname, "../proto/comment.proto");
 const packageDefinition = protoLoader.loadSync(COMMENT_PROTO_PATH, { keepCase: true });
 const CommentService = grpc.loadPackageDefinition(packageDefinition).comment.CommentService;
 
+const COMMENT_SERVICE_HOST = process.env.COMMENT_SERVICE_HOST || "localhost";
+const COMMENT_SERVICE_PORT = process.env.COMMENT_SERVICE_PORT || "50052";
+const COMMENT_SERVICE_URL = `${COMMENT_SERVICE_HOST}:${COMMENT_SERVICE_PORT}`;
+
+
 // Connect to Post Service
 const CommentServiceClient = new CommentService(
-  process.env.COMMENT_SERVICE_URL || "localhost:50052",
+  COMMENT_SERVICE_URL ,
   grpc.credentials.createInsecure()
 );
 
