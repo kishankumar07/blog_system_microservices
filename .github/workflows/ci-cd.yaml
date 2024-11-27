@@ -55,11 +55,24 @@ jobs:
         POST_SERVICE_DB_URL: ${{ secrets.POST_SERVICE_DB_URL }}
         POST_SERVICE_PORT: ${{ secrets.POST_SERVICE_PORT }}
       run: |
-        # Start all services
-        cd $GITHUB_WORKSPACE/api-gateway && npm run start &
-        cd $GITHUB_WORKSPACE/post-service && npm run start &
-        cd $GITHUB_WORKSPACE/comment-service && npm run start &
-        wait
+       # Start all services
+        cd $GITHUB_WORKSPACE/api-gateway && npm run start & 
+        API_GATEWAY_PID=$!
+        echo "API Gateway started with PID $API_GATEWAY_PID"
+
+        cd $GITHUB_WORKSPACE/post-service && npm run start & 
+        POST_SERVICE_PID=$!
+        echo "Post Service started with PID $POST_SERVICE_PID"
+
+        cd $GITHUB_WORKSPACE/comment-service && npm run start & 
+        COMMENT_SERVICE_PID=$!
+        echo "Comment Service started with PID $COMMENT_SERVICE_PID"
+
+        # Wait for all services to finish
+        wait $API_GATEWAY_PID
+        wait $POST_SERVICE_PID
+        wait $COMMENT_SERVICE_PID
+        echo "All services have started."
 
     # (Optional) Add Deployment Step
     # For example: Deploy to Render, Heroku, or a cloud server.
