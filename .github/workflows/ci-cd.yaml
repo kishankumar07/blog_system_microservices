@@ -39,7 +39,13 @@ jobs:
     - name: List Directory Contents
       run: |
         echo "Root directory contents:"
-        ls -R    
+        ls
+        echo "API Gateway directory contents:"
+        ls api-gateway
+        echo "Post Service directory contents:"
+        ls post-service
+        echo "Comment Service directory contents:"
+        ls comment-service   
 
     - name: Run Services
       env:
