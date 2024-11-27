@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install Dependencies for API Gateway
+      run: |
+        cd api-gateway
+        npm install
+
+    - name: Install Dependencies for Post Service
+      run: |
+        cd post-service
+        npm install
+
+    - name: Install Dependencies for Comment Service
+      run: |
+        cd comment-service
+        npm install
+
+    - name: Run Services
+      run: |
+        # Start all services
+        cd api-gateway && npm run start &
+        cd ../post-service && npm run start &
+        cd ../comment-service && npm run start &
+        wait
+
+    # (Optional) Add Deployment Step
+    # For example: Deploy to Render, Heroku, or a cloud server.

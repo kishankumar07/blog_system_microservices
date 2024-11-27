@@ -1,0 +1,19 @@
+{
+  "name": "blog_system",
+  "version": "1.0.0",
+  "description": "-  In Node.js v20.10.0 and later, when you're using ECMAScript modules (ESM), you need to specify the type: \"json\" attribute when importing JSON files.\r - Make sure the type:module inside the package.json",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-post-service": "npm --prefix post-service run dev",
+    "start-comment-service":"npm --prefix comment-service run dev",
+    "start-api-gateway":"npm --prefix api-gateway run dev",
+    "start":"concurrently \"npm run start-post-service\" \"npm run start-comment-service\" \"npm run start-api-gateway\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

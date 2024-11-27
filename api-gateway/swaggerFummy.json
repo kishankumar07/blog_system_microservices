@@ -1,0 +1,691 @@
+{
+      "openapi": "3.0.0",
+      "info": {
+        "title": "Post and Comment Service API",
+        "version": "1.0.0",
+        "description": "API documentation for the Post and Comment Service, part of the microservices architecture."
+      },
+      "servers": [
+        {
+          "url": "http://localhost:3000",
+          "description": "API Gateway"
+        }
+      ],
+      "paths": {
+        "/posts": {
+          "get": {
+            "summary": "Get all posts",
+            "operationId": "getAllPosts",
+            "responses": {
+              "200": {
+                "description": "List of all posts",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "posts": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Post"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "post": {
+            "summary": "Create a new post",
+            "operationId": "createPost",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreatePostRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Post created successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/CreatePostResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/posts/{id}": {
+          "get": {
+            "summary": "Get a specific post by ID",
+            "operationId": "getPostById",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The ID of the post to retrieve"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Post details",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/GetPostByIdResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/comments": {
+          "get": {
+            "summary": "Get comments for a specific post",
+            "operationId": "getCommentsForPost",
+            "parameters": [
+              {
+                "name": "postId",
+                "in": "query",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The ID of the post to fetch comments for"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "List of comments for the post",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "comments": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Comment"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "post": {
+            "summary": "Create a comment",
+            "operationId": "createComment",
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CreateCommentRequest"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Comment created successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/CreateCommentResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/comments/{id}": {
+          "delete": {
+            "summary": "Delete a comment",
+            "operationId": "deleteComment",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The ID of the comment to delete"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Comment deleted successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/DeleteCommentResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "schemas": {
+          "Post": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "content": { "type": "string" },
+              "author": { "type": "string" },
+              "created_at": { "type": "string", "format": "date-time" },
+              "updated_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "CreatePostRequest": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "content": { "type": "string" },
+              "author": { "type": "string" }
+            }
+          },
+          "CreatePostResponse": {
+            "type": "object",
+            "properties": {
+              "post": {
+                "$ref": "#/components/schemas/Post"
+              }
+            }
+          },
+          "Comment": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "postId": { "type": "string" },
+              "content": { "type": "string" },
+              "author": { "type": "string" },
+              "created_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "CreateCommentRequest": {
+            "type": "object",
+            "properties": {
+              "postId": { "type": "string" },
+              "content": { "type": "string" },
+              "author": { "type": "string" }
+            }
+          },
+          "CreateCommentResponse": {
+            "type": "object",
+            "properties": {
+              "comment": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "DeleteCommentResponse": {
+            "type": "object",
+            "properties": {
+              "message": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+    
+
+
+
+    {
+      "get": {
+        "summary": "Get all posts",
+        "operationId": "getAllPosts",
+        "responses": {
+          "200": {
+            "description": "List of all posts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "posts": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Post"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "posts": [
+                    {
+                      "id": "6745e4ceff01d7494119c554",
+                      "title": "First Post",
+                      "content": "This is an example post.",
+                      "author": "John Doe",
+                      "created_at": "2024-11-26T15:10:06.680+00:00",
+                      "updated_at": "2024-11-26T15:10:06.680+00:00"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "error": "Internal Server Error",
+                  "message": "Error fetching all posts."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No posts found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "message": { "type": "string" }
+                  }
+                },
+                "example": {
+                  "error": "Not Found",
+                  "message": "No posts found."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+
+
+    {
+      "post": {
+        "summary": "Create a new post",
+        "operationId": "createPost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "content": { "type": "string" },
+                  "author": { "type": "string" }
+                },
+                "required": ["title", "content", "author"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Post successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "post": { "$ref": "#/components/schemas/Post" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Invalid input data" }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "Title must be unique" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string", "example": "An unexpected error occurred" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+
+    {
+      "paths": {
+        "/posts/{id}": {
+          "get": {
+            "summary": "Get a post by ID",
+            "description": "Fetches a single post by its unique ID.",
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                },
+                "description": "The unique identifier of the post"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Post retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "post": {
+                          "type": "object",
+                          "properties": {
+                            "_id": {
+                              "type": "string",
+                              "example": "64f6068342371fa54474d8c1"
+                            },
+                            "title": {
+                              "type": "string",
+                              "example": "Sample Post Title"
+                            },
+                            "content": {
+                              "type": "string",
+                              "example": "Sample post content."
+                            },
+                            "author": {
+                              "type": "string",
+                              "example": "Author Name"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-11-26T17:33:55.986Z"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "format": "date-time",
+                              "example": "2024-11-26T17:33:55.986Z"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Invalid post ID format",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid post ID format"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Post not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Post not found"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Internal server error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Internal server error"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+
+
+    {
+      "paths": {
+        "/posts/{id}": {
+          "delete": {
+            "summary": "Delete a post by ID",
+            "description": "Deletes a specific post by its unique ID.",
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9a-fA-F]{24}$"
+                },
+                "description": "The unique identifier of the post to delete"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Post deleted successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Post deleted successfully"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Invalid post ID format",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid post ID format"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Post not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Post not found"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Internal server error",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Failed to delete post"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+
+
+
+
+
+    "/comments/{postId}": {
+  "get": {
+    "summary": "Get comments for a specific post",
+    "operationId": "getCommentsForPost",
+    "parameters": [
+      {
+        "name": "postId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The ID of the post to fetch comments for"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "List of comments for the post",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "No comments found for the post",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" }
+              }
+            },
+            "example": {
+              "error": "No comments found for post ID: 12345"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": { "type": "string" }
+              }
+            },
+            "example": {
+              "error": "Failed to fetch comments due to a server error."
+            }
+          }
+        }
+      }
+    }
+  }
+}
