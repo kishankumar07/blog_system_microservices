@@ -56,9 +56,9 @@ jobs:
         POST_SERVICE_PORT: ${{ secrets.POST_SERVICE_PORT }}
       run: |
         # Start all services
-        cd api-gateway && npm run start &
-        cd ../post-service && npm run start &
-        cd ../comment-service && npm run start &
+        cd $GITHUB_WORKSPACE/api-gateway && npm run start &
+        cd $GITHUB_WORKSPACE/post-service && npm run start &
+        cd $GITHUB_WORKSPACE/comment-service && npm run start &
         wait
 
     # (Optional) Add Deployment Step
