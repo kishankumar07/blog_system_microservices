@@ -35,6 +35,11 @@ jobs:
       run: |
         cd comment-service
         npm install
+        
+    - name: List Directory Contents
+      run: |
+        echo "Root directory contents:"
+        ls -R    
 
     - name: Run Services
       env:
