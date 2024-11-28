@@ -29,18 +29,14 @@ jobs:
         env:
           POST_SERVICE_DB_URL: ${{ secrets.POST_SERVICE_DB_URL }}
         run: |
-          docker build \
-            --build-arg DB_URL=${POST_SERVICE_DB_URL} \
-            -t kta6161/post-service:latest ./post-service
+          docker build -t kta6161/post-service:latest ./post-service
           docker push kta6161/post-service:latest
 
       - name: Build and Push Comment Service Docker Image
         env:
           COMMENT_SERVICE_DB_URL: ${{ secrets.COMMENT_SERVICE_DB_URL }}
         run: |
-          docker build \
-            --build-arg DB_URL=${COMMENT_SERVICE_DB_URL} \
-            -t kta6161/comment-service:latest ./comment-service
+          docker build -t kta6161/comment-service:latest ./comment-service
           docker push kta6161/comment-service:latest
 
       - name: Build and Push API Gateway Docker Image
